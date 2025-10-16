@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Parque do Saber</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+<h1 class="mb-4">Parque do Saber</h1>
+
+<!-- Navegação por abas -->
+<ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="diretor-tab" data-bs-toggle="tab" data-bs-target="#diretor" type="button" role="tab">Diretor</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="turma-tab" data-bs-toggle="tab" data-bs-target="#turma" type="button" role="tab">Turma</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="aluno-tab" data-bs-toggle="tab" data-bs-target="#aluno" type="button" role="tab">Aluno</button>
+    </li>
+</ul>
+
+<!-- Conteúdo das abas -->
+<div class="tab-content" id="myTabContent">
+    <!-- Aba Diretor -->
+    <div class="tab-pane fade show active" id="diretor" role="tabpanel">
+        <h3>Cadastro de Diretor</h3>
+        <form id="formDiretor" class="mb-3">
+            <label for="nomeDiretor">Nome</label>
+            <input type="text" id="nomeDiretor" name="nome" class="form-control mb-2" required>
+
+            <label for="emailDiretor">Email</label>
+            <input type="email" id="emailDiretor" name="email" class="form-control mb-2" required>
+
+            <label for="telefoneDiretor">Telefone</label>
+            <input type="text" id="telefoneDiretor" name="telefone" class="form-control mb-2" required>
+
+            <label for="senhaDiretor">Senha</label>
+            <input type="password" id="senhaDiretor" name="senha" class="form-control mb-2" required>
+
+            <button type="submit" class="btn btn-primary">Cadastrar Diretor</button>
+        </form>
+        <div id="mensagemDiretor" class="mt-2"></div>
+    </div>
+
+    <!-- Aba Turma -->
+    <div class="tab-pane fade" id="turma" role="tabpanel">
+        <h3>Cadastro de Turma</h3>
+        <form id="formTurma" class="mb-3">
+            <label for="nomeTurma">Nome da Turma</label>
+            <input type="text" id="nomeTurma" name="nome" class="form-control mb-2" required>
+
+            <label for="turnoTurma">Turno</label>
+            <input type="text" id="turnoTurma" name="turno" class="form-control mb-2" required>
+
+            <label for="salaTurma">Sala</label>
+            <input type="text" id="salaTurma" name="sala" class="form-control mb-2" required>
+
+            <button type="submit" class="btn btn-success">Cadastrar Turma</button>
+        </form>
+        <div id="mensagemTurma" class="mt-2"></div>
+    </div>
+
+    <!-- Aba Aluno -->
+    <div class="tab-pane fade" id="aluno" role="tabpanel">
+        <h3>Cadastro de Aluno</h3>
+        <form id="formAluno" class="mb-3">
+            <label for="nomeAluno">Nome</label>
+            <input type="text" id="nomeAluno" name="nome" class="form-control mb-2" required>
+
+            <label for="emailAluno">Email</label>
+            <input type="email" id="emailAluno" name="email" class="form-control mb-2" required>
+
+            <label for="telefoneAluno">Telefone</label>
+            <input type="text" id="telefoneAluno" name="telefone" class="form-control mb-2" required>
+
+            <button type="submit" class="btn btn-info">Cadastrar Aluno</button>
+        </form>
+        <div id="mensagemAluno" class="mt-2"></div>
+
+        <h3>Lista de Alunos</h3>
+        <button onclick="carregarAlunos()" class="btn btn-outline-primary mb-2">Atualizar Lista</button>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Ações</th>
+            </tr>
+            </thead>
+            <tbody id="tabelaAlunos"></tbody>
+        </table>
+
+        <h3>Quantidade de Alunos</h3>
+        <button onclick="listarQuantidade()" class="btn btn-warning mb-3">Ver Quantidade</button>
+        <p id="quantidade"></p>
+
+        <h3>Editar Aluno</h3>
+        <form action="/alunos/editar" method="get" class="mb-3">
+            <label for="idAlunoEditar">ID</label>
+            <input type="number" id="idAlunoEditar" name="id" class="form-control mb-2" required>
+
+            <label for="nomeAlunoEditar">Nome</label>
+            <input type="text" id="nomeAlunoEditar" name="nome" class="form-control mb-2" required>
+
+            <label for="emailAlunoEditar">Email</label>
+            <input type="email" id="emailAlunoEditar" name="email" class="form-control mb-2" required>
+
+            <label for="telefoneAlunoEditar">Telefone</label>
+            <input type="text" id="telefoneAlunoEditar" name="telefone" class="form-control mb-2" required>
+
+            <button type="submit" class="btn btn-secondary">Editar Aluno</button>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script>
+    // Util: converte FormData em querystring (compatível)
+    function toQueryString(form) {
+        const fd = new FormData(form);
+        const params = new URLSearchParams();
+        for (const [k, v] of fd.entries()) params.append(k, v);
+        return params.toString();
+    }
+
+    // Cadastro de diretor via AJAX
+    document.getElementById("formDiretor").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const qs = toQueryString(e.target);
+        fetch("/diretores/cadastrar?" + qs)
+            .then(res => res.json())
+            .then(() => {
+                document.getElementById("mensagemDiretor").innerHTML = "<div class='alert alert-success'>Diretor cadastrado com sucesso!</div>";
+                e.target.reset();
+            })
+            .catch(() => {
+                document.getElementById("mensagemDiretor").innerHTML = "<div class='alert alert-danger'>Erro ao cadastrar diretor.</div>";
+            });
+    });
+
+    // Cadastro de turma via AJAX
+    document.getElementById("formTurma").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const qs = toQueryString(e.target);
+        fetch("/turmas/cadastrar?" + qs)
+            .then(res => res.json())
+            .then(() => {
+                document.getElementById("mensagemTurma").innerHTML = "<div class='alert alert-success'>Turma cadastrada com sucesso!</div>";
+                e.target.reset();
+            })
+            .catch(() => {
+                document.getElementById("mensagemTurma").innerHTML = "<div class='alert alert-danger'>Erro ao cadastrar turma.</div>";
+            });
+    });
+
+    // Cadastro de aluno via AJAX
+    document.getElementById("formAluno").addEventListener("submit", function(e) {
+        e.preventDefault();
+        const qs = toQueryString(e.target);
+        fetch("/alunos/cadastrar?" + qs)
+            .then(res => res.json())
+            .then(() => {
+                document.getElementById("mensagemAluno").innerHTML = "<div class='alert alert-success'>Aluno cadastrado com sucesso!</div>";
+                e.target.reset();
+                carregarAlunos();
+            })
+            .catch(() => {
+                document.getElementById("mensagemAluno").innerHTML = "<div class='alert alert-danger'>Erro ao cadastrar aluno.</div>";
+            });
+    });
+
+    // Listar alunos
+    function carregarAlunos() {
+        fetch("/alunos/listar")
+            .then(res => res.json())
+            .then(data => {
+                const tabela = document.getElementById("tabelaAlunos");
+                tabela.innerHTML = "";
+                data.forEach(aluno => {
+                    const linha = `
+                            <tr>
+                                <td>${aluno.id}</td>
+                                <td>${aluno.nome}</td>
+                                <td>${aluno.email}</td>
+                                <td>${aluno.telefone}</td>
+                                <td>
+                                    <button onclick="preencherEdicao(${aluno.id}, '${aluno.nome}', '${aluno.email}', '${aluno.telefone}')" class="btn btn-sm btn-warning">Editar</button>
+                                    <button onclick="deletarAluno(${aluno.id})" class="btn btn-sm btn-danger">Excluir</button>
+                                </td>
+                            </tr>
+                        `;
+                    tabela.insertAdjacentHTML("beforeend", linha);
+                });
+            })
+            .catch(() => {
+                document.getElementById("mensagemAluno").innerHTML = "<div class='alert alert-danger'>Erro ao carregar alunos.</div>";
+            });
+    }
+
+    // Deletar aluno
+    function deletarAluno(id) {
+        fetch("/alunos/deletar/" + id, { method: "DELETE" })
+            .then(() => {
+                alert("Aluno excluído com sucesso!");
+                carregarAlunos();
+            })
+            .catch(() => alert("Erro ao excluir aluno."));
+    }
+
+    // Preencher formulário de edição
+    function preencherEdicao(id, nome, email, telefone) {
+        document.getElementById("idAlunoEditar").value = id;
+        document.getElementById("nomeAlunoEditar").value = nome;
+        document.getElementById("emailAlunoEditar").value = email;
+        document.getElementById("telefoneAlunoEditar").value = telefone;
+    }
+
+    // Quantidade de alunos
+    function listarQuantidade() {
+        fetch("/alunos/quantidade")
+            .then(res => res.text())
+            .then(qtd => {
+                document.getElementById("quantidade").innerText = "Total de alunos cadastrados: " + qtd;
+            })
+            .catch(() => {
+                document.getElementById("quantidade").innerText = "Erro ao buscar quantidade.";
+            });
+    }
+
+    // Carregar lista ao abrir a aba Aluno
+    document.getElementById("aluno-tab").addEventListener("click", carregarAlunos);
+    // Carregar imediatamente ao abrir a página
+    carregarAlunos();
+</script>
+
+<!-- Scripts Bootstrap -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
