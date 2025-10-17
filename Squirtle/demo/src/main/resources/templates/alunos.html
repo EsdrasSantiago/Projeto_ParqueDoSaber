@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parque do Saber - Alunos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+    body {
+        padding-top: 80px;
+    }
+    .navbar-custom {
+        background-color: #1c1c1c;
+    }
+    .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #f8f9fa !important;
+    }
+    .nav-link {
+        color: #f8f9fa !important;
+    }
+    .nav-link.active {
+        text-decoration: underline;
+    }
+    h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    form label {
+        font-weight: bold;
+    }
+    form input {
+        margin-bottom: 0.5rem;
+    }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Parque do Saber</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="/diretores">Diretores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/turmas">Turmas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/alunos">Alunos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <section class="mb-5">
+            <h2>Cadastro de Aluno</h2>
+            <form th:action="@{/alunos/cadastrar}" method="post">
+                <div class="mb-3">
+                    <label for="nomeAluno">Nome</label>
+                    <input type="text" id="nomeAluno" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="emailAluno">Email</label>
+                    <input type="email" id="emailAluno" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="telefoneAluno">Telefone</label>
+                    <input type="text" id="telefoneAluno" name="telefone" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Cadastrar Aluno</button>
+            </form>
+        </section>
+
+        <section class="mb-5">
+            <h2>Lista de Alunos</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="aluno : ${alunos}">
+                        <td th:text="${aluno.id}"></td>
+                        <td th:text="${aluno.nome}"></td>
+                        <td th:text="${aluno.email}"></td>
+                        <td th:text="${aluno.telefone}"></td>
+                        <td>
+                            <form th:action="@{'/alunos/deletar/' + ${aluno.id}}" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                            </form>
+                            <button type="button" class="btn btn-sm btn-warning"
+                                    th:attr="data-id=${aluno.id}, data-nome=${aluno.nome}, data-email=${aluno.email}, data-telefone=${aluno.telefone}"
+                                    onclick="preencherEdicaoComData(this)">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>Editar Aluno</h2>
+            <form th:action="@{/alunos/editar}" method="post">
+                <input type="hidden" id="idAlunoEditar" name="id">
+                <div class="mb-3">
+                    <label for="nomeAlunoEditar">Nome</label>
+                    <input type="text" id="nomeAlunoEditar" name="nome" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="emailAlunoEditar">Email</label>
+                    <input type="email" id="emailAlunoEditar" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="telefoneAlunoEditar">Telefone</label>
+                    <input type="text" id="telefoneAlunoEditar" name="telefone" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-secondary">Editar Aluno</button>
+            </form>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function preencherEdicaoComData(botao) {
+            document.getElementById("idAlunoEditar").value = botao.getAttribute("data-id");
+            document.getElementById("nomeAlunoEditar").value = botao.getAttribute("data-nome");
+            document.getElementById("emailAlunoEditar").value = botao.getAttribute("data-email");
+            document.getElementById("telefoneAlunoEditar").value = botao.getAttribute("data-telefone");
+            window.scrollTo({ top: document.getElementById("idAlunoEditar").offsetTop - 100, behavior: "smooth" });
+        }
+    </script>
+</body>
+</html>

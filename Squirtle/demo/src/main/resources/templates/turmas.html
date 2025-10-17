@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Parque do Saber - Turmas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 80px;
+        }
+        .navbar-custom {
+            background-color: #1c1c1c;
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #f8f9fa !important;
+        }
+        .nav-link {
+            color: #f8f9fa !important;
+        }
+        .nav-link.active {
+            text-decoration: underline;
+        }
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        form label {
+            font-weight: bold;
+        }
+        form input {
+            margin-bottom: 0.5rem;
+        }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Parque do Saber</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/diretores">Diretores</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/turmas">Turmas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/alunos">Alunos</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <h2>Cadastro de Turma</h2>
+        <form th:action="@{/turmas/cadastrar}" method="post" class="mb-4">
+            <label for="nome">Nome da Turma</label>
+            <input type="text" id="nome" name="nome" class="form-control" required>
+
+            <label for="turno">Turno</label>
+            <input type="text" id="turno" name="turno" class="form-control" required>
+
+            <label for="sala">Sala</label>
+            <input type="text" id="sala" name="sala" class="form-control" required>
+
+            <button type="submit" class="btn btn-primary mt-2">Cadastrar Turma</button>
+        </form>
+
+        <h2>Lista de Turmas</h2>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Nome</th><th>Turno</th><th>Sala</th><th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="turma : ${turmas}">
+                    <td th:text="${turma.id}"></td>
+                    <td th:text="${turma.nome}"></td>
+                    <td th:text="${turma.turno}"></td>
+                    <td th:text="${turma.sala}"></td>
+                    <td>
+                        <form th:action="@{'/turmas/deletar/' + ${turma.id}}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                        </form>
+                        <button type="button" class="btn btn-sm btn-warning"
+                                th:attr="data-id=${turma.id}, data-nome=${turma.nome}, data-turno=${turma.turno}, data-sala=${turma.sala}"
+                                onclick="preencherEdicaoTurma(this)">
+                            Editar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>Editar Turma</h2>
+        <form th:action="@{/turmas/editar}" method="post" class="mb-4">
+            <input type="hidden" id="idTurmaEditar" name="id">
+            <label for="nomeTurmaEditar">Nome</label>
+            <input type="text" id="nomeTurmaEditar" name="nome" class="form-control" required>
+
+            <label for="turnoTurmaEditar">Turno</label>
+            <input type="text" id="turnoTurmaEditar" name="turno" class="form-control" required>
+
+            <label for="salaTurmaEditar">Sala</label>
+            <input type="text" id="salaTurmaEditar" name="sala" class="form-control" required>
+
+            <button type="submit" class="btn btn-secondary mt-2">Editar Turma</button>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        function preencherEdicaoTurma(botao) {
+            document.getElementById("idTurmaEditar").value = botao.getAttribute("data-id");
+            document.getElementById("nomeTurmaEditar").value = botao.getAttribute("data-nome");
+            document.getElementById("turnoTurmaEditar").value = botao.getAttribute("data-turno");
+            document.getElementById("salaTurmaEditar").value = botao.getAttribute("data-sala");
+            window.scrollTo({ top: document.getElementById("idTurmaEditar").offsetTop - 100, behavior: "smooth" });
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
