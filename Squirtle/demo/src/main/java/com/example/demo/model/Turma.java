@@ -38,6 +38,4 @@ public class Turma {
     public void setSala(String sala) {
         this.sala = sala;
     }
-
-    // Getters e Setters
 }

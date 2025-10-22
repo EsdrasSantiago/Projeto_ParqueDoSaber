@@ -2,7 +2,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro de Diretor</title>
+  <title>Editar Aluno</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -12,37 +12,34 @@
       <a class="navbar-brand" href="/">Parque do Saber</a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="/diretores/cadastrar">Diretores</a></li>
+          <li class="nav-item"><a class="nav-link" href="/diretores/cadastrar">Diretores</a></li>
           <li class="nav-item"><a class="nav-link" href="/turmas/cadastrar">Turmas</a></li>
-          <li class="nav-item"><a class="nav-link" href="/alunos/cadastrar">Alunos</a></li>
+          <li class="nav-item"><a class="nav-link active" href="/alunos/cadastrar">Alunos</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
   <div class="container py-4">
-    <h2>Cadastro de Diretor</h2>
-    <form th:action="@{/diretores/cadastrar}" method="post">
+    <h2>Editar Aluno</h2>
+    <form th:action="@{/alunos/editar}" method="post">
+      <input type="hidden" name="id" th:value="${aluno.id}">
       <div class="mb-3">
         <label for="nome">Nome</label>
-        <input type="text" id="nome" name="nome" class="form-control" required>
+        <input type="text" id="nome" name="nome" class="form-control" th:value="${aluno.nome}" required>
       </div>
       <div class="mb-3">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" class="form-control" required>
+        <input type="email" id="email" name="email" class="form-control" th:value="${aluno.email}" required>
       </div>
       <div class="mb-3">
         <label for="telefone">Telefone</label>
-        <input type="text" id="telefone" name="telefone" class="form-control" required>
+        <input type="text" id="telefone" name="telefone" class="form-control" th:value="${aluno.telefone}" required>
       </div>
-      <div class="mb-3">
-        <label for="senha">Senha</label>
-        <input type="password" id="senha" name="senha" class="form-control" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Cadastrar Diretor</button>
+      <button type="submit" class="btn btn-secondary">Salvar Alterações</button>
     </form>
 
-    <a th:href="@{/diretores/lista}" class="btn btn-outline-secondary mt-4">← Voltar à Lista</a>
+    <a th:href="@{/alunos/lista}" class="btn btn-outline-secondary mt-4">← Voltar à Lista</a>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

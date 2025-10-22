@@ -22,14 +22,11 @@ public class DiretorController {
     @Autowired
     private DiretorRepository repository;
 
-    // Exibe a página com a lista e os formulários (Thymeleaf)
-    @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("diretores", repository.findAll());
-        return "diretores"; 
+    @GetMapping("/cadastrar")
+    public String mostrarFormularioCadastro() {
+        return "diretores";
     }
 
-    // Cadastra um novo diretor (Thymeleaf)
     @PostMapping("/cadastrar")
     public String cadastrar(@RequestParam String nome,
                             @RequestParam String email,
@@ -41,10 +38,28 @@ public class DiretorController {
         diretor.setTelefone(telefone);
         diretor.setSenha(senha);
         repository.save(diretor);
-        return "redirect:/diretores";
+        return "redirect:/diretores/lista";
     }
 
-    // Edita um diretor existente (Thymeleaf)
+    @GetMapping("/lista")
+    public String listar(Model model) {
+        model.addAttribute("diretores", repository.findAll());
+        return "diretores-lista";
+    }
+
+    @PostMapping("/deletar/{id}")
+    public String deletar(@PathVariable Long id) {
+        repository.deleteById(id);
+        return "redirect:/diretores/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEdicao(@PathVariable Long id, Model model) {
+        Diretor diretor = repository.findById(id).orElseThrow();
+        model.addAttribute("diretor", diretor);
+        return "diretores-editar";
+    }
+
     @PostMapping("/editar")
     public String editar(@RequestParam Long id,
                          @RequestParam String nome,
@@ -55,25 +70,17 @@ public class DiretorController {
         diretor.setEmail(email);
         diretor.setTelefone(telefone);
         repository.save(diretor);
-        return "redirect:/diretores";
+        return "redirect:/diretores/lista";
     }
 
-    // Exclui um diretor (Thymeleaf)
-    @PostMapping("/deletar/{id}")
-    public String deletar(@PathVariable Long id) {
-        repository.deleteById(id);
-        return "redirect:/diretores";
-    }
+// Rotas REST para AJAX
 
-    // --- Rotas REST para HTML estático com JavaScript (AJAX) ---
-
-    // Cadastrar via AJAX
     @PostMapping("/api/cadastrar")
     @ResponseBody
     public Diretor cadastrarViaAjax(@RequestParam String nome,
-                                     @RequestParam String email,
-                                     @RequestParam String telefone,
-                                     @RequestParam String senha) {
+                                    @RequestParam String email,
+                                    @RequestParam String telefone,
+                                    @RequestParam String senha) {
         Diretor diretor = new Diretor();
         diretor.setNome(nome);
         diretor.setEmail(email);
@@ -82,7 +89,6 @@ public class DiretorController {
         return repository.save(diretor);
     }
 
-    // Listar via AJAX
     @GetMapping("/api/listar")
     @ResponseBody
     public List<Diretor> listarJson() {

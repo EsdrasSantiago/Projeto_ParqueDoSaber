@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Diretores</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="pt-5">
+  <nav class="navbar navbar-expand-lg bg-dark navbar-dark fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Parque do Saber</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="/diretores/cadastrar">Diretores</a></li>
+          <li class="nav-item"><a class="nav-link" href="/turmas/cadastrar">Turmas</a></li>
+          <li class="nav-item"><a class="nav-link" href="/alunos/cadastrar">Alunos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <h2>Lista de Diretores</h2>
+    <a th:href="@{/diretores/cadastrar}" class="btn btn-success mb-3">+ Cadastrar Novo</a>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th><th>Nome</th><th>Email</th><th>Telefone</th><th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="diretor : ${diretores}">
+          <td th:text="${diretor.id}"></td>
+          <td th:text="${diretor.nome}"></td>
+          <td th:text="${diretor.email}"></td>
+          <td th:text="${diretor.telefone}"></td>
+          <td>
+            <form th:action="@{'/diretores/deletar/' + ${diretor.id}}" method="post" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este diretor?')">
+              <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+            </form>
+            <a th:href="@{'/diretores/editar/' + ${diretor.id}}" class="btn btn-sm btn-warning">Editar</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

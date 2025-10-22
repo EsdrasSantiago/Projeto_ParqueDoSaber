@@ -46,6 +46,4 @@ public class Diretor {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-    // Getters e Setters
 }

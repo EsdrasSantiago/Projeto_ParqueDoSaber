@@ -8,6 +8,12 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "diretores"; 
+        return "home"; 
     }
+
+    @GetMapping("/ParqueDoSaber.html")
+    public String redirecionarParaHome() {
+        return "redirect:/";
+    }
+
 }

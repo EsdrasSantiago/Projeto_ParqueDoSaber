@@ -2,7 +2,7 @@
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro de Turma</title>
+  <title>Editar Turma</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -21,21 +21,22 @@
   </nav>
 
   <div class="container py-4">
-    <h2>Cadastro de Turma</h2>
-    <form th:action="@{/turmas/cadastrar}" method="post">
+    <h2>Editar Turma</h2>
+    <form th:action="@{/turmas/editar}" method="post">
+      <input type="hidden" name="id" th:value="${turma.id}">
       <div class="mb-3">
         <label for="nome">Nome da Turma</label>
-        <input type="text" id="nome" name="nome" class="form-control" required>
+        <input type="text" id="nome" name="nome" class="form-control" th:value="${turma.nome}" required>
       </div>
       <div class="mb-3">
         <label for="turno">Turno</label>
-        <input type="text" id="turno" name="turno" class="form-control" required>
+        <input type="text" id="turno" name="turno" class="form-control" th:value="${turma.turno}" required>
       </div>
       <div class="mb-3">
         <label for="sala">Sala</label>
-        <input type="text" id="sala" name="sala" class="form-control" required>
+        <input type="text" id="sala" name="sala" class="form-control" th:value="${turma.sala}" required>
       </div>
-      <button type="submit" class="btn btn-primary">Cadastrar Turma</button>
+      <button type="submit" class="btn btn-secondary">Salvar Alterações</button>
     </form>
 
     <a th:href="@{/turmas/lista}" class="btn btn-outline-secondary mt-4">← Voltar à Lista</a>

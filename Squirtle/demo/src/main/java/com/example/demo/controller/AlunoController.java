@@ -27,14 +27,11 @@ public class AlunoController {
         this.repository = repository;
     }
 
-    // Página com listagem de alunos (Thymeleaf)
-    @GetMapping
-    public String listarAlunos(Model model) {
-        model.addAttribute("alunos", repository.findAll());
+    @GetMapping("/cadastrar")
+    public String mostrarFormularioCadastro() {
         return "alunos";
     }
 
-    // Cadastro via formulário (Thymeleaf)
     @PostMapping("/cadastrar")
     public String cadastrarAluno(@RequestParam String nome,
                                  @RequestParam String email,
@@ -44,10 +41,28 @@ public class AlunoController {
         aluno.setEmail(email);
         aluno.setTelefone(telefone);
         repository.save(aluno);
-        return "redirect:/alunos";
+        return "redirect:/alunos/lista";
     }
 
-    // Edição via formulário (Thymeleaf)
+    @GetMapping("/lista")
+    public String listarAlunos(Model model) {
+        model.addAttribute("alunos", repository.findAll());
+        return "alunos-lista";
+    }
+
+    @PostMapping("/deletar/{id}")
+    public String deletarAluno(@PathVariable Long id) {
+        repository.deleteById(id);
+        return "redirect:/alunos/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEdicao(@PathVariable Long id, Model model) {
+        Aluno aluno = repository.findById(id).orElseThrow();
+        model.addAttribute("aluno", aluno);
+        return "alunos-editar";
+    }
+
     @PostMapping("/editar")
     public String editarAluno(@RequestParam Long id,
                               @RequestParam String nome,
@@ -58,17 +73,10 @@ public class AlunoController {
         aluno.setEmail(email);
         aluno.setTelefone(telefone);
         repository.save(aluno);
-        return "redirect:/alunos";
+        return "redirect:/alunos/lista";
     }
 
-    // Exclusão via formulário (Thymeleaf)
-    @PostMapping("/deletar/{id}")
-    public String deletarAluno(@PathVariable Long id) {
-        repository.deleteById(id);
-        return "redirect:/alunos";
-    }
-
-    // --- Rotas REST para AJAX (HTML estático) ---
+// Rotas REST para AJAX
 
     @PostMapping("/api/cadastrar")
     @ResponseBody

@@ -22,14 +22,11 @@ public class TurmaController {
     @Autowired
     private TurmaRepository repository;
 
-    // Exibe a página com a lista e os formulários (Thymeleaf)
-    @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("turmas", repository.findAll());
+    @GetMapping("/cadastrar")
+    public String mostrarFormularioCadastro() {
         return "turmas"; 
     }
 
-    // Cadastra uma nova turma (Thymeleaf)
     @PostMapping("/cadastrar")
     public String cadastrar(@RequestParam String nome,
                             @RequestParam String turno,
@@ -39,10 +36,28 @@ public class TurmaController {
         turma.setTurno(turno);
         turma.setSala(sala);
         repository.save(turma);
-        return "redirect:/turmas";
+        return "redirect:/turmas/lista"; 
     }
 
-    // Edita uma turma existente (Thymeleaf)
+    @GetMapping("/lista")
+    public String listar(Model model) {
+        model.addAttribute("turmas", repository.findAll());
+        return "turmas-lista";
+    }
+
+    @PostMapping("/deletar/{id}")
+    public String deletar(@PathVariable Long id) {
+        repository.deleteById(id);
+        return "redirect:/turmas/lista";
+    }
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEdicao(@PathVariable Long id, Model model) {
+        Turma turma = repository.findById(id).orElseThrow();
+        model.addAttribute("turma", turma);
+        return "turmas-editar";
+    }
+
     @PostMapping("/editar")
     public String editar(@RequestParam Long id,
                          @RequestParam String nome,
@@ -53,19 +68,11 @@ public class TurmaController {
         turma.setTurno(turno);
         turma.setSala(sala);
         repository.save(turma);
-        return "redirect:/turmas";
+        return "redirect:/turmas/lista";
     }
 
-    // Exclui uma turma (Thymeleaf)
-    @PostMapping("/deletar/{id}")
-    public String deletar(@PathVariable Long id) {
-        repository.deleteById(id);
-        return "redirect:/turmas";
-    }
+// Rotas REST para AJAX
 
-    // --- Rotas REST para HTML estático com JavaScript (AJAX) ---
-
-    // Cadastrar via AJAX
     @PostMapping("/api/cadastrar")
     @ResponseBody
     public Turma cadastrarViaAjax(@RequestParam String nome,
@@ -78,7 +85,6 @@ public class TurmaController {
         return repository.save(turma);
     }
 
-    // Listar via AJAX
     @GetMapping("/api/listar")
     @ResponseBody
     public List<Turma> listarJson() {
