@@ -27,6 +27,12 @@ public class TurmaApiController {
         return turmaRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Turma buscarPorId(@PathVariable Long id) {
+        return turmaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Turma não encontrada"));
+    }
+
     @PostMapping
     public Turma salvar(@RequestBody Turma turma) {
         return turmaRepository.save(turma);

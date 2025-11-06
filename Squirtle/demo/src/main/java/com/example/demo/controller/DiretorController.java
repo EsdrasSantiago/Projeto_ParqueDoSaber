@@ -72,26 +72,4 @@ public class DiretorController {
         repository.save(diretor);
         return "redirect:/diretores/lista";
     }
-
-// Rotas REST para AJAX
-
-    @PostMapping("/api/cadastrar")
-    @ResponseBody
-    public Diretor cadastrarViaAjax(@RequestParam String nome,
-                                    @RequestParam String email,
-                                    @RequestParam String telefone,
-                                    @RequestParam String senha) {
-        Diretor diretor = new Diretor();
-        diretor.setNome(nome);
-        diretor.setEmail(email);
-        diretor.setTelefone(telefone);
-        diretor.setSenha(senha);
-        return repository.save(diretor);
-    }
-
-    @GetMapping("/api/listar")
-    @ResponseBody
-    public List<Diretor> listarJson() {
-        return repository.findAll();
-    }
 }

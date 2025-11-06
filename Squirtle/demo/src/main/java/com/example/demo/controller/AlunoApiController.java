@@ -27,6 +27,12 @@ public class AlunoApiController {
         return alunoRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Aluno buscarPorId(@PathVariable Long id) {
+        return alunoRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+    }
+
     @PostMapping
     public Aluno salvar(@RequestBody Aluno aluno) {
         return alunoRepository.save(aluno);

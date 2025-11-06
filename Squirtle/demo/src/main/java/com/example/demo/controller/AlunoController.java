@@ -75,49 +75,4 @@ public class AlunoController {
         repository.save(aluno);
         return "redirect:/alunos/lista";
     }
-
-// Rotas REST para AJAX
-
-    @PostMapping("/api/cadastrar")
-    @ResponseBody
-    public Aluno cadastrarViaAjax(@RequestParam String nome,
-                                  @RequestParam String email,
-                                  @RequestParam String telefone) {
-        Aluno aluno = new Aluno();
-        aluno.setNome(nome);
-        aluno.setEmail(email);
-        aluno.setTelefone(telefone);
-        return repository.save(aluno);
-    }
-
-    @GetMapping("/api/listar")
-    @ResponseBody
-    public List<Aluno> listarJson() {
-        return repository.findAll();
-    }
-
-    @GetMapping("/api/quantidade")
-    @ResponseBody
-    public long quantidade() {
-        return repository.count();
-    }
-
-    @GetMapping("/api/editar")
-    @ResponseBody
-    public Aluno editarViaGet(@RequestParam Long id,
-                              @RequestParam String nome,
-                              @RequestParam String email,
-                              @RequestParam String telefone) {
-        Aluno aluno = repository.findById(id).orElseThrow();
-        aluno.setNome(nome);
-        aluno.setEmail(email);
-        aluno.setTelefone(telefone);
-        return repository.save(aluno);
-    }
-
-    @DeleteMapping("/api/deletar/{id}")
-    @ResponseBody
-    public void deletarViaDelete(@PathVariable Long id) {
-        repository.deleteById(id);
-    }
 }

@@ -70,24 +70,4 @@ public class TurmaController {
         repository.save(turma);
         return "redirect:/turmas/lista";
     }
-
-// Rotas REST para AJAX
-
-    @PostMapping("/api/cadastrar")
-    @ResponseBody
-    public Turma cadastrarViaAjax(@RequestParam String nome,
-                                   @RequestParam String turno,
-                                   @RequestParam String sala) {
-        Turma turma = new Turma();
-        turma.setNome(nome);
-        turma.setTurno(turno);
-        turma.setSala(sala);
-        return repository.save(turma);
-    }
-
-    @GetMapping("/api/listar")
-    @ResponseBody
-    public List<Turma> listarJson() {
-        return repository.findAll();
-    }
 }
